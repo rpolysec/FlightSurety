@@ -61,8 +61,11 @@ flightSuretyApp.events.OracleRequest({
       
       for(let i = 0; i < RegisteredOracles.length; i++) {
         if(RegisteredOracles[i].index.includes(index)) {
-          let result = await flightSuretyApp.methods.submitOracleResponse(index, airline, flight, timestamp, statusCode).send({from: oracle_accounts[i].address});
-          console.log(result);
+          flightSuretyApp.methods.submitOracleResponse(index, airline, flight, timestamp, statusCode)
+          .send({from: oracle_accounts[i].address}, (error, result) =>
+          {
+            console.log(error, result);
+          });
         }
       }
     }
