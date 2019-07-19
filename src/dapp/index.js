@@ -24,9 +24,14 @@ import { ContractModuleFactory } from 'web3-eth-contract';
         DOM.elid('btn-operational-status').addEventListener('click', () => {
             let status = DOM.elid('operational-status');
             contract.isOperational((error, result) => {
-                if(error){
-                    console.log(error);
-                    result = parseErrorMessage(error);
+                if (error!=false){
+                    try{
+                        result = parseErrorMessage(error);
+                    }
+                    catch(e){
+                        console.log(error);
+                    }
+                    console.log(result);
                 }
                 status.innerText = result;
             });
@@ -48,9 +53,14 @@ import { ContractModuleFactory } from 'web3-eth-contract';
             }
             contract.toggleStatus(newstatus, (error, result) => {
                 contract.isOperational((error, result) => {
-                    if(error){
-                        console.log(error);
-                        result = parseErrorMessage(error);
+                    if (error!=false){
+                        try{
+                            result = parseErrorMessage(error);
+                        }
+                        catch(e){
+                            console.log(error);
+                        }
+                        console.log(result);
                     }
                     status.innerText = result;
                 });
@@ -156,37 +166,67 @@ import { ContractModuleFactory } from 'web3-eth-contract';
             contract.activeAccount = DOM.elid('available-accounts').value;
                     DOM.elid('acc-address').innerText = contract.activeAccount;
                     contract.isAirlineRegistered(contract.activeAccount, (error, result) => {
-                        if(error){
-                            result = parseErrorMessage(error);
+                        if (error!=false){
+                            try{
+                                result = parseErrorMessage(error);
+                            }
+                            catch(e){
+                                console.log(error);
+                            }
+                            console.log(result);
                         }
                         DOM.elid('acc-registered').innerText = result;
                         //console.log(result);
                     });
                     contract.isAirlineFunded((error, result) => {
-                        if(error){
-                            result = parseErrorMessage(error);
+                        if (error!=false){
+                            try{
+                                result = parseErrorMessage(error);
+                            }
+                            catch(e){
+                                console.log(error);
+                            }
+                            console.log(result);
                         }
                         DOM.elid('acc-funded').innerText = result;
                         //console.log(result);
                     });
                     contract.isAirlineNominated((error, result) => {
-                        if(error){
-                            result = parseErrorMessage(error);
+                        if (error!=false){
+                            try{
+                                result = parseErrorMessage(error);
+                            }
+                            catch(e){
+                                console.log(error);
+                            }
+                            console.log(result);
                         }
                         DOM.elid('acc-nominated').innerText = result;
                         //console.log(result);
                     });
                     contract.getPassengerCreditBalance((error, result) => {
-                        if(error){
-                            result = parseErrorMessage(error);
+                        if (error!=false){
+                            try{
+                                result = parseErrorMessage(error);
+                            }
+                            catch(e){
+                                console.log(error);
+                            }
+                            console.log(result);
                         }
                         DOM.elid('acc-credit').innerText = result;
                         //console.log(result);
                     });
                     web3.eth.getBalance(contract.activeAccount, (error, result) =>
                     {
-                        if(error){
-                            result = parseErrorMessage(error);
+                        if (error!=false){
+                            try{
+                                result = parseErrorMessage(error);
+                            }
+                            catch(e){
+                                console.log(error);
+                            }
+                            console.log(result);
                         }
                         DOM.elid('acc-balance').innerText = result;
                         //console.log(result);
@@ -204,7 +244,12 @@ function displayAirlineMessage(label, error, result){
     let row = section.appendChild(DOM.div({className:'row'}));
     row.appendChild(DOM.div({className: 'col-sm-1 field'}, label));
     if (error!=false){
-        result = parseErrorMessage(error);
+        try{
+            result = parseErrorMessage(error);
+        }
+        catch(e){
+            console.log(error);
+        }
         console.log(result);
     }
     row.appendChild(DOM.div({className: 'col-sm-8 field-value'}, String(result)));
@@ -222,7 +267,12 @@ function displayFlightMessage(label, error, result){
     let row = section.appendChild(DOM.div({className:'row'}));
     row.appendChild(DOM.div({className: 'col-sm-1 field'}, label));
     if (error!=false){
-        result = parseErrorMessage(error);
+        try{
+            result = parseErrorMessage(error);
+        }
+        catch(e){
+            console.log(error);
+        }
         console.log(result);
     }
     row.appendChild(DOM.div({className: 'col-sm-8 field-value'}, String(result)));
@@ -240,7 +290,12 @@ function displayInsuranceMessage(label, error, result){
     let row = section.appendChild(DOM.div({className:'row'}));
     row.appendChild(DOM.div({className: 'col-sm-1 field'}, label));
     if (error!=false){
-        result = parseErrorMessage(error);
+        try{
+            result = parseErrorMessage(error);
+        }
+        catch(e){
+            console.log(error);
+        }
         console.log(result);
     }
     row.appendChild(DOM.div({className: 'col-sm-8 field-value'}, String(result)));
