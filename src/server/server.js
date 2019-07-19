@@ -5,50 +5,39 @@ import express from 'express';
 
 
 let config = Config['localhost'];
-let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
+//let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url.replace('http', 'ws')));
+let web3 = new Web3(new Web3.providers.WebsocketProvider(config.url));
 web3.eth.defaultAccount = web3.eth.accounts[0];
 let flightSuretyApp = new web3.eth.Contract(FlightSuretyApp.abi, config.appAddress);
+let OracleCount = 5;
+let RegisteredOracles = [];
 
 // Grab some available accounts to register oracles with
-web3.eth.getAccounts( async (error, accounts) =>  {
+//web3.eth.getAccounts( async (error, accounts) =>
 
-  let OracleCount = 5;
+async function RegisterOracles() {
 
-  flightSuretyApp.methods.isOperational.call()
-  .then(function (result) {
-    console.log("Returned from a promise");
-    console.log(result);
-  })
-  .catch(function (error) {
-    console.log("Error checking if contract is operational");
-    console.log(error);
-  });
-    
-  // ARRANGE
-  let fee = '1'; //await flightSuretyApp.methods.REGISTRATION_FEE.call();
+  // For debugging, check the contract is operational
 
-  // ACT
+  let operational = await flightSuretyApp.methods.isOperational.call();
+  console.log(`FlighSuretyApp Found: ${operational}`);
+  
+  let fee = await flightSuretyApp.methods.REGISTRATION_FEE().call();
+  console.log(fee);
+  let accounts = await web3.eth.getAccounts();
+
+  // register some oracles
   for(let i=1; i<OracleCount; i++) {
     console.log(accounts[i]);
-    flightSuretyApp.methods.registerOracle()
-    .send({ from: accounts[i], value: web3.utils.toWei(fee, 'ether')})
-    .then(function (result) {
-      console.log("Registered Orcale " + i);
-      flightSuretyApp.methods.getMyIndexes.call({from: accounts[i]})
-      .then(function (result) {
-        console.log(`Oracle Registered: ${result[0]}, ${result[1]}, ${result[2]}`);
-      })
-      .catch(function (error) {
-        console.log("Error grabbing indices of Oracle");
-        console.log(error);
-      });
-    })
-    .catch(function (error) {
-      console.log("Error resistering Oracle " + i);
-      console.log(error);
-    });
+    let result = await flightSuretyApp.methods.registerOracle().send({ from: accounts[i], value: fee, gas: '4712388', gasPrice: '100000000000'});
+    console.log(`Registered oracle ${i}.  Retrieving indexes.`);
+    console.log(result);
+    let result2 = await flightSuretyApp.methods.getMyIndexes.call({from: accounts[i]})
+    console.log(`Oracle Registered: ${result2[0]}, ${result2[1]}, ${result2[2]}`);
   }
-});
+}
+
+RegisterOracles();
 
 flightSuretyApp.events.OracleRequest({
     fromBlock: 0
