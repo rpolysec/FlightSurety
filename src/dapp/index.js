@@ -91,9 +91,9 @@ import { ContractModuleFactory } from 'web3-eth-contract';
         DOM.elid('submit-oracle').addEventListener('click', () => {
             let tuple = DOM.elid('registered-flight-select').value;
             // Write transaction
-            //contract.fetchFlightStatus(tuple, (error, result) => {
-            //    displayInsuranceMessage('Status', error, `${result.flight} , ${result.airline}, ${result.timestamp}`);
-            //});
+            contract.fetchFlightStatus(tuple, (error, result) => {
+                displayInsuranceMessage('Status', error, `${result.flight} , ${result.airline}, ${result.timestamp}`);
+            });
         })
         
        DOM.elid('btn-flights-register').addEventListener('click', () => {
